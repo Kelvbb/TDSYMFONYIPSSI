@@ -30,11 +30,11 @@ class RegistrationController extends AbstractController
             $user->setPassword(
                 $passwordHasher->hashPassword($user, (string) $form->get('plainPassword')->getData())
             );
-            $user->setIsActive(false);
+            $user->setIsActive(true);
             $em->persist($user);
             $em->flush();
 
-            $this->addFlash('success', 'Inscription réussie. Un administrateur doit valider votre compte pour vous connecter.');
+            $this->addFlash('success', 'Inscription réussie. Vous pouvez vous connecter.');
             return $this->redirectToRoute('app_login');
         }
 

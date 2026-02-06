@@ -57,11 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private bool $isActive = false;
 
     /** @var Collection<int, Post> */
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author')]
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'author', cascade: ['remove'], orphanRemoval: true)]
     private Collection $posts;
 
     /** @var Collection<int, Comment> */
-    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author')]
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'author', cascade: ['remove'], orphanRemoval: true)]
     private Collection $comments;
 
     public function __construct()

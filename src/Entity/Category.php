@@ -23,7 +23,7 @@ class Category
     private ?string $name = null;
 
     /** @var Collection<int, Post> */
-    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'category', cascade: ['remove'])]
+    #[ORM\OneToMany(targetEntity: Post::class, mappedBy: 'category', cascade: ['remove'], orphanRemoval: true)]
     private Collection $posts;
 
     public function __construct()
