@@ -1,0 +1,40 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_title %}Tableau de bord{% endblock %}
+
+{% block admin_content %}
+<h1 class="h5 fw-normal mb-4">Tableau de bord</h1>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card card-minimal">
+            <div class="card-body">
+                <p class="small text-secondary mb-0">Articles</p>
+                <p class="h4 fw-normal mb-2">{{ posts_count }}</p>
+                <a href="{{ path('admin_post_index') }}" class="btn btn-minimal btn-sm">Gérer</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-minimal">
+            <div class="card-body">
+                <p class="small text-secondary mb-0">Utilisateurs</p>
+                <p class="h4 fw-normal mb-2">{{ users_count }}</p>
+                <a href="{{ path('admin_user_index') }}" class="btn btn-minimal btn-sm">Gérer</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-minimal">
+            <div class="card-body">
+                <p class="small text-secondary mb-0">Commentaires</p>
+                <p class="h4 fw-normal mb-2">{{ comments_count }}</p>
+                <a href="{{ path('admin_comment_index') }}" class="btn btn-minimal btn-sm">Gérer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="{{ path('admin_post_new') }}" class="btn btn-minimal-solid btn-sm">Nouvel article</a>
+<a href="{{ path('admin_category_index') }}" class="btn btn-minimal btn-sm">Catégories</a>
+{% endblock %}

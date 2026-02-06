@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le profil{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-minimal">
+            <div class="card-body p-4">
+                <h1 class="h5 fw-normal mb-4">Modifier le profil</h1>
+                {{ form_start(profile_form) }}
+                {{ form_widget(profile_form, { attr: { class: 'form-control border-secondary' } }) }}
+                <button type="submit" class="btn btn-minimal-solid btn-sm mt-2">Enregistrer</button>
+                <a href="{{ path('profile_show') }}" class="btn btn-minimal btn-sm mt-2">Annuler</a>
+                {{ form_end(profile_form) }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

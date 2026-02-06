@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{% block admin_title %}Admin{% endblock %} — Paradox{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .admin-wrapper { width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw; }
+    .admin-layout { display: flex; min-height: calc(100vh - 56px); }
+    .admin-sidebar { width: 240px; flex-shrink: 0; border-right: 1px solid var(--minimal-border); background: #fafafa; padding: 1.5rem 0; }
+    .admin-sidebar-nav { list-style: none; padding: 0; margin: 0; }
+    .admin-sidebar-nav li { margin: 0; }
+    .admin-sidebar-nav a { display: block; padding: 0.5rem 1.5rem; color: var(--minimal-black); font-size: 0.95rem; }
+    .admin-sidebar-nav a:hover { background: #f0f0f0; color: var(--minimal-gray); }
+    .admin-sidebar-nav .active a { font-weight: 500; }
+    .admin-sidebar-title { padding: 0 1.5rem 0.75rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--minimal-gray); }
+    .admin-content { flex: 1; padding: 1.5rem 2rem; overflow: auto; }
+    @media (max-width: 991.98px) {
+        .admin-layout { flex-direction: column; }
+        .admin-sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--minimal-border); padding: 1rem 0; }
+        .admin-sidebar-nav { display: flex; flex-wrap: wrap; gap: 0.25rem; padding: 0 1rem; }
+        .admin-sidebar-nav li { flex: 1 1 auto; }
+        .admin-sidebar-nav a { padding: 0.4rem 0.75rem; }
+        .admin-sidebar-title { padding: 0 1rem 0.5rem; }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+    <div class="admin-wrapper">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <p class="admin-sidebar-title">Administration</p>
+            <ul class="admin-sidebar-nav">
+                <li class="{{ app.request.get('_route') == 'admin_dashboard' ? 'active' }}">
+                    <a href="{{ path('admin_dashboard') }}">Tableau de bord</a>
+                </li>
+                <li class="{{ app.request.get('_route') in ['admin_post_index', 'admin_post_new', 'admin_post_edit'] ? 'active' }}">
+                    <a href="{{ path('admin_post_index') }}">Articles</a>
+                </li>
+                <li class="{{ app.request.get('_route') == 'admin_post_new' ? 'active' }}">
+                    <a href="{{ path('admin_post_new') }}">Nouvel article</a>
+                </li>
+                <li class="{{ app.request.get('_route') in ['admin_category_index', 'admin_category_new', 'admin_category_edit'] ? 'active' }}">
+                    <a href="{{ path('admin_category_index') }}">Catégories</a>
+                </li>
+                <li class="{{ app.request.get('_route') == 'admin_user_index' ? 'active' }}">
+                    <a href="{{ path('admin_user_index') }}">Utilisateurs</a>
+                </li>
+                <li class="{{ app.request.get('_route') == 'admin_comment_index' ? 'active' }}">
+                    <a href="{{ path('admin_comment_index') }}">Commentaires</a>
+                </li>
+            </ul>
+        </aside>
+        <main class="admin-content">
+            {% block admin_content %}{% endblock %}
+        </main>
+    </div>
+    </div>
+{% endblock %}

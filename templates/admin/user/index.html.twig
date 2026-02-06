@@ -1,0 +1,42 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_title %}Utilisateurs{% endblock %}
+
+{% block admin_content %}
+<h1 class="h5 fw-normal mb-4">Utilisateurs</h1>
+
+<div class="card card-minimal">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="small text-secondary">
+                <tr><th>Id</th><th>Email</th><th>Nom</th><th>Inscrit</th><th>Statut</th><th>Rôles</th><th></th></tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td class="small text-secondary">{{ user.id }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.displayName }}</td>
+                    <td class="small text-secondary">{{ user.createdAt|date('d/m/Y') }}</td>
+                    <td>
+                        {% if user.isActive %}<span class="badge badge-minimal">Actif</span>
+                        {% else %}<span class="badge badge-minimal text-secondary">En attente</span>{% endif %}
+                    </td>
+                    <td class="small text-secondary">{{ user.roles|join(', ') }}</td>
+                    <td>
+                        {% if user.id != app.user.id %}
+                        <form method="post" action="{{ path('admin_user_toggle_active', { id: user.id }) }}" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('toggle-active' ~ user.id) }}">
+                            <button type="submit" class="btn btn-minimal btn-sm">{{ user.isActive ? 'Désactiver' : 'Valider' }}</button>
+                        </form>
+                        {% else %}<span class="text-secondary small">—</span>{% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7" class="text-secondary small">Aucun utilisateur.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

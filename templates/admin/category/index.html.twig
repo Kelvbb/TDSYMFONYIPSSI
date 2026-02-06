@@ -1,0 +1,100 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block admin_title %}Catégories{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h5 fw-normal">Catégories</h1>
+    <a href="{{ path('admin_category_new') }}" class="btn btn-minimal-solid btn-sm">Nouvelle catégorie</a>
+</div>
+
+<div class="card card-minimal">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="small text-secondary">
+                <tr><th>Id</th><th>Nom</th><th>Articles</th><th width="140"></th></tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                {% set article_titles = category.posts|column('title') %}
+                <tr>
+                    <td class="small text-secondary">{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td class="small text-secondary">{{ category.posts|length }}</td>
+                    <td class="text-nowrap">
+                        <span class="d-inline-flex align-items-center gap-1">
+                            <a href="{{ path('admin_category_edit', { id: category.id }) }}" class="btn btn-minimal btn-sm">Modifier</a>
+                            <form method="post" action="{{ path('admin_category_delete', { id: category.id }) }}" class="d-inline category-delete-form" data-category-name="{{ category.name|e('html_attr') }}" data-article-titles="{{ article_titles|json_encode|e('html_attr') }}">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete-category' ~ category.id) }}">
+                                <button type="submit" class="btn btn-minimal btn-sm">Supprimer</button>
+                            </form>
+                        </span>
+                    </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="4" class="text-secondary small">Aucune catégorie.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{# Modal de confirmation avec liste des articles #}
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-labelledby="deleteCategoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteCategoryModalLabel">Supprimer la catégorie</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-2">La catégorie <strong id="modalCategoryName"></strong> contient les articles suivants. Ils seront également supprimés.</p>
+                <ul id="modalArticleList" class="list-group list-group-flush mb-0"></ul>
+                <p class="mt-2 small text-secondary mb-0">Confirmer la suppression ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-minimal" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-minimal-solid" id="modalConfirmDelete">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    const modal = document.getElementById('deleteCategoryModal');
+    const modalCategoryName = document.getElementById('modalCategoryName');
+    const modalArticleList = document.getElementById('modalArticleList');
+    const modalConfirmBtn = document.getElementById('modalConfirmDelete');
+    let formToSubmit = null;
+
+    document.querySelectorAll('.category-delete-form').forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            const titles = JSON.parse(form.getAttribute('data-article-titles') || '[]');
+            if (titles.length > 0) {
+                e.preventDefault();
+                formToSubmit = form;
+                modalCategoryName.textContent = form.getAttribute('data-category-name') || '';
+                modalArticleList.innerHTML = titles.map(function(title) {
+                    return '<li class="list-group-item small">' + escapeHtml(title) + '</li>';
+                }).join('');
+                new bootstrap.Modal(modal).show();
+            }
+        });
+    });
+
+    modalConfirmBtn.addEventListener('click', function() {
+        if (formToSubmit) {
+            formToSubmit.removeEventListener('submit', arguments.callee);
+            formToSubmit.submit();
+        }
+    });
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+})();
+</script>
+{% endblock %}

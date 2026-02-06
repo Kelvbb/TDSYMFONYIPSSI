@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-minimal">
+            <div class="card-body p-4">
+                <h1 class="h5 fw-normal mb-4">Inscription</h1>
+
+                {{ form_start(registrationForm) }}
+                {{ form_row(registrationForm.email, { attr: { class: 'form-control border-secondary' } }) }}
+                {{ form_row(registrationForm.firstName, { attr: { class: 'form-control border-secondary' } }) }}
+                {{ form_row(registrationForm.lastName, { attr: { class: 'form-control border-secondary' } }) }}
+                {{ form_row(registrationForm.plainPassword, { attr: { class: 'form-control border-secondary' } }) }}
+                <button type="submit" class="btn btn-minimal-solid w-100">S'inscrire</button>
+                {{ form_end(registrationForm) }}
+
+                <p class="mt-4 mb-0 text-center text-secondary small">
+                    Déjà inscrit ? <a href="{{ path('app_login') }}" class="text-body">Connexion</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

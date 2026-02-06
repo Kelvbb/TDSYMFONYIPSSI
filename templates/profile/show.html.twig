@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-minimal">
+            <div class="card-body p-4">
+                <h1 class="h5 fw-normal mb-4">Profil</h1>
+                <div class="row">
+                    <div class="col-md-4 text-center mb-3">
+                        {% if user.profilePicture %}
+                        <img src="{{ user.profilePicture }}" alt="Photo" class="img-fluid" referrerpolicy="no-referrer" style="max-height: 140px;">
+                        {% else %}
+                        <div class="bg-light d-inline-flex align-items-center justify-content-center text-secondary" style="width: 100px; height: 100px;">
+                            <span class="h4">{{ user.firstName|slice(0, 1)|upper }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <p class="mb-1 small"><span class="text-secondary">Prénom</span> {{ user.firstName }}</p>
+                        <p class="mb-1 small"><span class="text-secondary">Nom</span> {{ user.lastName }}</p>
+                        <p class="mb-1 small"><span class="text-secondary">Email</span> {{ user.email }}</p>
+                        <p class="mb-3 small text-secondary">{{ user.createdAt|date('d/m/Y') }}</p>
+                        <a href="{{ path('profile_edit') }}" class="btn btn-minimal btn-sm">Modifier</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

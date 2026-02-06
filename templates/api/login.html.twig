@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion API{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card card-minimal">
+            <div class="card-body p-4">
+                <h1 class="h5 fw-normal mb-4">Connexion API</h1>
+                <p class="text-secondary small mb-4">Connectez-vous avec un compte administrateur pour accéder à l'API.</p>
+
+                {% if error %}
+                <div class="alert alert-minimal alert-danger mb-3">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                {% endif %}
+
+                <form method="post">
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <div class="mb-3">
+                        <label for="inputEmail" class="form-label small text-secondary">Email</label>
+                        <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control border-secondary" autocomplete="email" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputPassword" class="form-label small text-secondary">Mot de passe</label>
+                        <input type="password" name="_password" id="inputPassword" class="form-control border-secondary" autocomplete="current-password" required>
+                    </div>
+                    <button class="btn btn-minimal-solid w-100" type="submit">Se connecter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
