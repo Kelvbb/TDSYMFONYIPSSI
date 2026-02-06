@@ -33,7 +33,18 @@ class AdminController extends AbstractController
         ]);
     }
 
-    // --- Articles ---
+
+
+
+
+
+    // ----------------------- Articles -----------------------
+
+
+
+
+
+    
     #[Route('/posts', name: 'admin_post_index', methods: ['GET'])]
     public function postIndex(PostRepository $postRepository): Response
     {
@@ -82,7 +93,21 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_post_index');
     }
 
-    // --- Catégories ---
+
+
+
+
+
+
+
+    // ----------------------- Catégories -----------------------
+
+
+
+
+
+
+
     #[Route('/categories', name: 'admin_category_index', methods: ['GET'])]
     public function categoryIndex(CategoryRepository $categoryRepository): Response
     {
@@ -130,7 +155,20 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_category_index');
     }
 
-    // --- Utilisateurs ---
+
+
+
+
+
+    // ----------------------- Utilisateurs -----------------------
+
+
+
+
+
+
+
+
     #[Route('/users', name: 'admin_user_index', methods: ['GET'])]
     public function userIndex(UserRepository $userRepository): Response
     {
@@ -154,7 +192,18 @@ class AdminController extends AbstractController
         return $this->redirectToRoute('admin_user_index');
     }
 
-    // --- Commentaires ---
+
+
+
+
+
+    // ----------------------- Commentaires -----------------------
+
+
+
+
+
+
     #[Route('/comments', name: 'admin_comment_index', methods: ['GET'])]
     public function commentIndex(CommentRepository $commentRepository): Response
     {

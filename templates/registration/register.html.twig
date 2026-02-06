@@ -2,6 +2,14 @@
 
 {% block title %}Inscription{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    .invalid-feedback,
+    .card-minimal form .mb-3 ul li { color: #dc3545 !important; }
+</style>
+{% endblock %}
+
 {% block body %}
 <div class="row justify-content-center">
     <div class="col-md-6">

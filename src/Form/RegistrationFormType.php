@@ -8,7 +8,6 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -32,21 +31,13 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Nom',
                 'attr' => ['class' => 'form-control'],
             ])
-            ->add('plainPassword', RepeatedType::class, [
+            ->add('plainPassword', PasswordType::class, [
                 'mapped' => false,
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passe doivent correspondre.',
-                'first_options' => [
-                    'label' => 'Mot de passe',
-                    'attr' => ['class' => 'form-control'],
-                    'constraints' => [
-                        new NotBlank(['message' => 'Veuillez entrer un mot de passe']),
-                        new Length(['min' => 6, 'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères']),
-                    ],
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le mot de passe',
-                    'attr' => ['class' => 'form-control'],
+                'label' => 'Mot de passe',
+                'attr' => ['class' => 'form-control'],
+                'constraints' => [
+                    new NotBlank(['message' => 'Veuillez entrer un mot de passe']),
+                    new Length(['min' => 6, 'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères']),
                 ],
             ]);
     }

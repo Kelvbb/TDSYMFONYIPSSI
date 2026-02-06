@@ -16,6 +16,7 @@ security:
             pattern: ^/api
             lazy: true
             provider: app_user_provider
+            access_denied_url: /access-denied
             form_login:
                 login_path: api_login
                 check_path: api_login
@@ -28,6 +29,7 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            access_denied_url: /access-denied
             form_login:
                 login_path: app_login
                 check_path: app_login
@@ -39,6 +41,7 @@ security:
             user_checker: App\Security\UserChecker
 
     access_control:
+        - { path: ^/access-denied, roles: PUBLIC_ACCESS }
         - { path: ^/api/login, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_ADMIN }
         - { path: ^/admin, roles: ROLE_ADMIN }

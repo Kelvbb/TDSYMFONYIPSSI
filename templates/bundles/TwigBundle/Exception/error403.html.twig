@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accès refusé{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card card-minimal">
+            <div class="card-body p-4 text-center">
+                <h1 class="h5 fw-normal mb-3">Accès refusé</h1>
+                <p class="text-secondary mb-4">Vous n'avez pas les droits nécessaires pour accéder à cette page.</p>
+                <a href="{{ path('home') }}" class="btn btn-minimal-solid">Retour à l'accueil</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

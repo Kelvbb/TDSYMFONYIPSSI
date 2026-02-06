@@ -3,62 +3,65 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block body %}
-<article class="mb-5">
-    <nav aria-label="fil d'Ariane" class="mb-4">
-        <ol class="breadcrumb bg-transparent p-0 small text-secondary">
-            <li class="breadcrumb-item"><a href="{{ path('home') }}" class="text-body">Accueil</a></li>
-            <li class="breadcrumb-item"><a href="{{ path('blog_index') }}" class="text-body">Articles</a></li>
-            <li class="breadcrumb-item active text-secondary" aria-current="page">{{ post.title }}</li>
-        </ol>
-    </nav>
+<div class="row">
+    <article class="col-lg-8 mb-5">
+        <nav aria-label="fil d'Ariane" class="mb-4">
+            <ol class="breadcrumb bg-transparent p-0 small text-secondary">
+                <li class="breadcrumb-item"><a href="{{ path('home') }}" class="text-body">Accueil</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('blog_index') }}" class="text-body">Articles</a></li>
+                <li class="breadcrumb-item active text-secondary" aria-current="page">{{ post.title }}</li>
+            </ol>
+        </nav>
 
-    <header class="mb-4">
-        <span class="badge badge-minimal">{{ post.category.name }}</span>
-        <h1 class="h4 fw-normal mt-2">{{ post.title }}</h1>
-        <p class="text-secondary small">{{ post.publishedAt|date('d/m/Y à H:i') }} — {{ post.author.displayName }}</p>
-    </header>
+        <header class="mb-4">
+            <span class="badge badge-minimal">{{ post.category.name }}</span>
+            <h1 class="h4 fw-normal mt-2">{{ post.title }}</h1>
+            <p class="text-secondary small">{{ post.publishedAt|date('d/m/Y à H:i') }} — {{ post.author.displayName }}</p>
+        </header>
 
-    {% if post.picture %}
-    <figure class="mb-4">
-        <img src="{{ post.picture|raw }}" class="img-fluid" alt="{{ post.title|e('html_attr') }}" referrerpolicy="no-referrer">
-    </figure>
-    {% endif %}
-
-    <div class="post-content mb-5 text-body" style="max-width: 65ch;">
-        {{ post.content|nl2br }}
-    </div>
-
-    <hr class="border-secondary">
-
-    <section class="comments">
-        <h2 class="h6 text-uppercase text-secondary mb-3">Commentaires ({{ post.approvedComments|length }})</h2>
-
-        {% if app.user %}
-        <div class="card card-minimal mb-4">
-            <div class="card-body">
-                <h3 class="h6 fw-normal mb-3">Ajouter un commentaire</h3>
-                {{ form_start(comment_form) }}
-                {{ form_widget(comment_form) }}
-                <button type="submit" class="btn btn-minimal-solid btn-sm mt-2">Publier</button>
-                {{ form_end(comment_form) }}
-            </div>
-        </div>
-        {% else %}
-        <p class="text-secondary small">
-            <a href="{{ path('app_login') }}" class="text-body">Connexion</a> pour commenter.
-        </p>
+        {% if post.picture %}
+        <figure class="mb-4">
+            <img src="{{ post.picture|raw }}" class="img-fluid" alt="{{ post.title|e('html_attr') }}" referrerpolicy="no-referrer">
+        </figure>
         {% endif %}
 
-        <div class="list-group list-group-flush">
-            {% for comment in post.approvedComments %}
-            <div class="list-group-item px-0 border-0 border-bottom border-secondary" style="border-color: var(--minimal-border) !important;">
-                <p class="small text-secondary mb-1">{{ comment.author.displayName }} — {{ comment.createdAt|date('d/m/Y H:i') }}</p>
-                <p class="mb-0 small">{{ comment.content|nl2br }}</p>
-            </div>
-            {% else %}
-            <p class="text-secondary small">Aucun commentaire.</p>
-            {% endfor %}
+        <div class="post-content text-body" style="max-width: 65ch;">
+            {{ post.content|nl2br }}
         </div>
-    </section>
-</article>
+    </article>
+
+    <aside class="col-lg-4">
+        <div class="card card-minimal sticky-top">
+            <div class="card-body">
+                <h2 class="h6 text-uppercase text-secondary mb-3">Commentaires ({{ post.approvedComments|length }})</h2>
+
+                {% if app.user %}
+                <div class="mb-4">
+                    <h3 class="h6 fw-normal mb-3">Ajouter un commentaire</h3>
+                    {{ form_start(comment_form) }}
+                    {{ form_widget(comment_form) }}
+                    <button type="submit" class="btn btn-minimal-solid btn-sm mt-2">Publier</button>
+                    {{ form_end(comment_form) }}
+                </div>
+                <hr class="border-secondary">
+                {% else %}
+                <p class="text-secondary small mb-4">
+                    <a href="{{ path('app_login') }}" class="text-body">Connexion</a> pour commenter.
+                </p>
+                {% endif %}
+
+                <div class="list-group list-group-flush">
+                    {% for comment in post.approvedComments %}
+                    <div class="list-group-item px-0 border-0 border-bottom border-secondary" style="border-color: var(--minimal-border) !important;">
+                        <p class="small text-secondary mb-1">{{ comment.author.displayName }} — {{ comment.createdAt|date('d/m/Y H:i') }}</p>
+                        <p class="mb-0 small">{{ comment.content|nl2br }}</p>
+                    </div>
+                    {% else %}
+                    <p class="text-secondary small">Aucun commentaire.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
 {% endblock %}

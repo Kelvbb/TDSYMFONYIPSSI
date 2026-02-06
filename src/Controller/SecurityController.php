@@ -27,6 +27,12 @@ class SecurityController extends AbstractController
         ]);
     }
 
+    #[Route('/access-denied', name: 'app_access_denied', methods: ['GET'])]
+    public function accessDenied(): Response
+    {
+        return $this->render('security/access_denied.html.twig');
+    }
+
     #[Route('/logout', name: 'app_logout', methods: ['GET'])]
     public function logout(): void
     {

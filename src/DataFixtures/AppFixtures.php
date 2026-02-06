@@ -21,77 +21,106 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Admin
-        $admin = new User();
-        $admin->setEmail('admin@paradox.local');
-        $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin123'));
-        $admin->setFirstName('Admin');
-        $admin->setLastName('Paradox');
-        $admin->setRoles([User::ROLE_ADMIN]);
-        $admin->setIsActive(true);
+        // Utilisateurs
+        $admin = $this->createUser('admin@paradox.local', 'admin123', 'Admin', 'Paradox', true, User::ROLE_ADMIN, null);
         $manager->persist($admin);
 
-        // Utilisateur
-        $user = new User();
-        $user->setEmail('marie@example.com');
-        $user->setPassword($this->passwordHasher->hashPassword($user, 'user123'));
-        $user->setFirstName('Marie');
-        $user->setLastName('Dupont');
-        $user->setProfilePicture('https://picsum.photos/id/64/200');
-        $user->setIsActive(true);
-        $manager->persist($user);
+        $usersData = [
+            ['marie@example.com', 'user123', 'Marie', 'Dupont', 'https://picsum.photos/id/64/200'],
+            ['jean@example.com', 'user123', 'Jean', 'Martin', 'https://picsum.photos/id/65/200'],
+            ['sophie@example.com', 'user123', 'Sophie', 'Bernard', 'https://picsum.photos/id/66/200'],
+            ['lucas@example.com', 'user123', 'Lucas', 'Petit', null],
+            ['lea@example.com', 'user123', 'Léa', 'Durand', null],
+        ];
+        $users = [$admin];
+        foreach ($usersData as [$email, $password, $firstName, $lastName, $profilePicture]) {
+            $user = $this->createUser($email, $password, $firstName, $lastName, true, null, $profilePicture);
+            $manager->persist($user);
+            $users[] = $user;
+        }
 
         // Catégories
-        $categories = ['Technologie', 'Voyage', 'Lifestyle'];
-        $categoryEntities = [];
-        foreach ($categories as $name) {
+        $categoryNames = ['Technologie', 'Voyage', 'Lifestyle', 'Culture', 'Sport'];
+        $categories = [];
+        foreach ($categoryNames as $name) {
             $cat = new Category();
             $cat->setName($name);
             $manager->persist($cat);
-            $categoryEntities[] = $cat;
+            $categories[] = $cat;
         }
 
         // Articles
         $postsData = [
-            ['Introduction à Symfony', 'Symfony est un framework PHP puissant...', $categoryEntities[0], 'https://picsum.photos/id/1/800/400'],
-            ['Mes vacances en Bretagne', 'La Bretagne offre des paysages magnifiques...', $categoryEntities[1], 'https://picsum.photos/id/10/800/400'],
-            ['Routine matinale productive', 'Se lever tôt change la vie...', $categoryEntities[2], 'https://picsum.photos/id/100/800/400'],
+            ['Introduction à Symfony', 'Symfony est un framework PHP puissant et flexible. Il permet de développer des applications web robustes en suivant les bonnes pratiques. Découvrez ses composants et sa philosophie.', $categories[0], $admin, 'https://picsum.photos/id/1/800/400'],
+            ['Mes vacances en Bretagne', 'La Bretagne offre des paysages magnifiques : falaises, plages de sable fin et villages typiques. Un séjour inoubliable entre mer et patrimoine.', $categories[1], $admin, 'https://picsum.photos/id/10/800/400'],
+            ['Routine matinale productive', 'Se lever tôt change la vie. Voici mes conseils pour une routine matinale efficace : exercice, méditation et petit-déjeuner équilibré.', $categories[2], $users[1], 'https://picsum.photos/id/100/800/400'],
+            ['Les meilleurs livres de l\'été', 'Une sélection de romans et essais à glisser dans votre valise pour les vacances. Des lectures qui marquent les esprits.', $categories[3], $users[2], 'https://picsum.photos/id/101/800/400'],
+            ['Course à pied : débuter en douceur', 'Conseils pour bien démarrer la course à pied sans se blesser. Programme progressif sur 8 semaines pour les débutants.', $categories[4], $admin, 'https://picsum.photos/id/102/800/400'],
+            ['PHP 8 : les nouvelles fonctionnalités', 'Découvrez les améliorations de PHP 8 : attributes, match expression, union types, named arguments et bien plus encore.', $categories[0], $users[1], 'https://picsum.photos/id/103/800/400'],
+            ['Week-end à Amsterdam', 'Balade le long des canaux, musées d\'exception et ambiance unique. Amsterdam en 48 heures, le guide complet.', $categories[1], $users[3], 'https://picsum.photos/id/104/800/400'],
         ];
         $posts = [];
-        foreach ($postsData as [$title, $content, $cat, $picture]) {
+        $dayOffset = 0;
+        foreach ($postsData as [$title, $content, $cat, $author, $picture]) {
             $post = new Post();
             $post->setTitle($title);
             $post->setContent($content);
             $post->setCategory($cat);
-            $post->setAuthor($admin);
-            $post->setPublishedAt(new \DateTimeImmutable('-2 days'));
+            $post->setAuthor($author);
+            $post->setPublishedAt(new \DateTimeImmutable("-{$dayOffset} days"));
             $post->setPicture($picture);
             $manager->persist($post);
             $posts[] = $post;
+            $dayOffset += 2;
         }
 
         // Commentaires
-        $comment1 = new Comment();
-        $comment1->setContent('Excellent article, très instructif !');
-        $comment1->setAuthor($user);
-        $comment1->setPost($posts[0]);
-        $comment1->setStatus(Comment::STATUS_APPROVED);
-        $manager->persist($comment1);
-
-        $comment2 = new Comment();
-        $comment2->setContent('J\'ai adoré la Bretagne aussi.');
-        $comment2->setAuthor($user);
-        $comment2->setPost($posts[1]);
-        $comment2->setStatus(Comment::STATUS_APPROVED);
-        $manager->persist($comment2);
-
-        $comment3 = new Comment();
-        $comment3->setContent('En attente de modération...');
-        $comment3->setAuthor($user);
-        $comment3->setPost($posts[0]);
-        $comment3->setStatus(Comment::STATUS_PENDING);
-        $manager->persist($comment3);
+        $commentsData = [
+            [$posts[0], $users[1], 'Excellent article, très instructif !', Comment::STATUS_APPROVED],
+            [$posts[0], $users[2], 'Merci pour ce partage, je vais tester Symfony.', Comment::STATUS_APPROVED],
+            [$posts[0], $users[3], 'En attente de modération...', Comment::STATUS_PENDING],
+            [$posts[1], $users[1], 'J\'ai adoré la Bretagne aussi. Les crêpes !', Comment::STATUS_APPROVED],
+            [$posts[1], $users[4], 'Quelle belle région, j\'y retourne cet été.', Comment::STATUS_APPROVED],
+            [$posts[2], $users[2], 'La routine matinale a changé ma vie.', Comment::STATUS_APPROVED],
+            [$posts[3], $users[1], 'Super sélection, j\'ai noté plusieurs titres.', Comment::STATUS_APPROVED],
+            [$posts[3], $users[4], 'Le dernier livre de la liste est un coup de cœur.', Comment::STATUS_PENDING],
+            [$posts[4], $users[3], 'Parfait pour reprendre le sport en douceur.', Comment::STATUS_APPROVED],
+            [$posts[5], $users[2], 'Les attributes PHP 8 sont géniaux !', Comment::STATUS_APPROVED],
+            [$posts[6], $users[1], 'Amsterdam est magique au printemps.', Comment::STATUS_APPROVED],
+        ];
+        foreach ($commentsData as [$post, $author, $content, $status]) {
+            $comment = new Comment();
+            $comment->setPost($post);
+            $comment->setAuthor($author);
+            $comment->setContent($content);
+            $comment->setStatus($status);
+            $manager->persist($comment);
+        }
 
         $manager->flush();
+    }
+
+    private function createUser(
+        string $email,
+        string $password,
+        string $firstName,
+        string $lastName,
+        bool $isActive,
+        ?string $role,
+        ?string $profilePicture = null
+    ): User {
+        $user = new User();
+        $user->setEmail($email);
+        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
+        $user->setFirstName($firstName);
+        $user->setLastName($lastName);
+        $user->setIsActive($isActive);
+        if ($role) {
+            $user->setRoles([$role]);
+        }
+        if ($profilePicture) {
+            $user->setProfilePicture($profilePicture);
+        }
+        return $user;
     }
 }
